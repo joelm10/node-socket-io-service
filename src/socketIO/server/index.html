@@ -1,0 +1,11 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io('http://localhost:9191');
+    socket.on('featureToggleUpdate', function(data) {
+        console.log('featureToggleUpdate:', data);
+        var date = new Date();
+        var timestamp = date.getTime();
+        document.write(timestamp + ' | socketIO Data:');
+        document.write(JSON.stringify(data) + '<br/>');
+    });
+</script>

@@ -1,0 +1,16 @@
+{
+    "loadOnInstantion": false,
+    "isExperimentalEnabled": false,
+    "features": [
+        {
+            "featureName": "tabWrapper",
+            "isExperimental": false,
+            "isEnabled": true
+        },
+        {
+            "featureName": "listWrapper",
+            "isExperimental": true,
+            "isEnabled": true
+        }
+    ]
+}
