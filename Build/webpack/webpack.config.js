@@ -6,16 +6,19 @@ const basePath = path.resolve(__dirname, '../../');
 
 /**
  * NOTE: Simplify and refine for prod vs dev builds
+ * TODO: change mode in build to allow deploy to prod build
  */
 module.exports = {
     mode: "development",
     entry: `${basePath}/src/socketIO/client/index.js`,
     context: basePath,
+
     output: {
       path: `${basePath}/dist/`,
       filename: "app.min.js",
       chunkFilename: "[name].js"
     },
+
     resolve: {
       alias: {
         components: `${basePath}/src/components/`,
@@ -33,29 +36,31 @@ module.exports = {
         ".js"
       ],
     },
+
+    module: {
+        rules: [
+          {
+            test: /\.(js|jsx)$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader'
+            }
+        },
+        ]
+    },
+
     performance: {
       hints: false
     },
+
     optimization: {
       splitChunks: false
     },
+
     plugins: [
         new HtmlWebPackPlugin({
             template: `${basePath}/src/index.html`,
             filename: `./index.html`
         })
-
-    ],
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: {
-              loader: 'babel-loader'
-          }
-      },
-      ]
-    },
-    "devServer": {}
+    ]
   }

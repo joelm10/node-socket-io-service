@@ -23,10 +23,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-#   Ignore build runtime css-module files
-# *.css.d.ts
-/storybook-static
-
-
 /*.tgz
 
