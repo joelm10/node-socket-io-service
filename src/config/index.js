@@ -1,7 +1,7 @@
 export const  exampleProps = {
     endPointUrl: 'http://localhost:9191',
     options: {},
-    delayTime: 2500
+    delayTime: 4500
 };
 
 export const defaultConfig = {

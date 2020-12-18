@@ -72,10 +72,11 @@ const ioWrapper = () => {
     // authorised request
     const isValidAuth = checkAuth();
     io.on('connection', socket => {
-        logger('==== Connection joined from:', socket.request.connection.remoteAddress, ' ====', 'info');
+        logger(`==== Connection joined from:' ${socket.request.connection.remoteAddress}  ====`, 'info');
         //  TODO: Add Robust Auth mechanism
         if (isValidAuth) {
-            socket.emit('featureToggleUpdate', { featureToggle });
+            const rulesForIP = rulesEngine(socket.request.connection.remoteAddress, featureToggle);
+            socket.emit('featureToggleUpdate', { rulesForIP });
         } else {
             socket.emit('featureToggleUpdate', { status: 401, auth: false });
         }
@@ -83,6 +84,14 @@ const ioWrapper = () => {
             logger(`Client disconnected. ]nDetails:\n ${reason}`, 'info');
         });
     });
+};
+
+const rulesEngine = () => {
+    const featureToggleWithUpdated = { 
+        // do stuff here
+    }
+    return featureToggleWithUpdated;
+
 };
 
 appServer();

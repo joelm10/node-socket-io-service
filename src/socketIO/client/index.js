@@ -16,15 +16,14 @@ import { HeaderWrapper, tabWrapper, listWrapper } from '../../reactComponents/in
  *  -   display data
  *  -   update feature toggle
  */
-
-
 class ExampleSocketIO extends React.Component {
     constructor(props) {
         super(props)
         //  Step 1: Add feature toggle to top level compoent state
         this.state = {
             config: {
-                featureToggle: { features: [] },
+                featureToggle: { features: [],
+                isSubscribed: false },
             },
             defaultConfig
 
@@ -44,21 +43,35 @@ class ExampleSocketIO extends React.Component {
     }
 
     getFeatures() {
-        //  Step 3: Hook into socketIO to listen for updates
-        //  TODO: update example to use socketIO wrapper
-        const { endPointUrl, options } = this.props;
-        const socket = io(endPointUrl, options);
-        socket.on('featureToggleUpdate', (data) => {
-            // update stuff based on the example
-            this.setState({
-                ...this.state,
-                config: {
-                    featureToggle: data.featureToggle,
-                    isExperimentalEnabled: false,
-                },
+        const { isSubscribed } = this.state;
+        if(!isSubscribed) {
+            //  Step 3: Hook into socketIO to listen for updates
+            //  TODO: update example to use socketIO wrapper
+            const { endPointUrl, options } = this.props;
+            const socket = io(endPointUrl, options);
 
+            socket.on('featureToggleUpdate', (data) => {
+                // 
+                this.setState({isSubscribed: true});
+                const state = {
+                    object: 'content'
+                    foo: 'bar',
+                    cat: 'dog',
+                    hello: 'world'
+                };
+
+                // update stuff based on the example
+                this.setState({
+                    ...this.state,
+                    config: {
+                        featureToggle: data.featureToggle,
+                        isExperimentalEnabled: false,
+                    },
+
+                });
             });
-        });
+
+        }
     }
     /**
      * NOTE:    This is a Lift/shift from utils library
@@ -88,6 +101,7 @@ class ExampleSocketIO extends React.Component {
             </React.Fragment>;
         });
     }
+
     render() {
         const {
             config: {
@@ -95,10 +109,12 @@ class ExampleSocketIO extends React.Component {
             },
             defaultConfig
         } = this.state;
+
         // Example content 
         const appName = 'Example of feature toggle setup';
         const defaultConfigObj = this.getFeatureSet('default:', defaultConfig.featureToggle.features);
         const updatedConfig = this.getFeatureSet('updated', features);
+        const loadedSTuff = updatedConfig.length ? <div className="col-6">{updatedConfig}</div> : 'features not loaded yet...';
 
         const featureToggleData = (
             <div className="row">
@@ -106,7 +122,7 @@ class ExampleSocketIO extends React.Component {
                     <h4>Features include:</h4></div>
 
                 {defaultConfigObj && <div className="col-6">{defaultConfigObj}</div>}
-                {updatedConfig.length ? <div className="col-6">{updatedConfig}</div> : 'features not loaded yet...'}
+                {loadedSTuff}
             </div>
         );
         /**
