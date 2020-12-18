@@ -22,11 +22,12 @@ class ExampleSocketIO extends React.Component {
         //  Step 1: Add feature toggle to top level compoent state
         this.state = {
             config: {
-                featureToggle: { features: [],
-                isSubscribed: false },
+                featureToggle: { 
+                    features: [],
+                },
             },
+            isSubscribed: false ,
             defaultConfig
-
         };
         // Use config, but allow for over-ride
         const { delayTime = 2000 } = defaultConfig;
@@ -51,15 +52,6 @@ class ExampleSocketIO extends React.Component {
             const socket = io(endPointUrl, options);
 
             socket.on('featureToggleUpdate', (data) => {
-                // 
-                this.setState({isSubscribed: true});
-                const state = {
-                    object: 'content'
-                    foo: 'bar',
-                    cat: 'dog',
-                    hello: 'world'
-                };
-
                 // update stuff based on the example
                 this.setState({
                     ...this.state,
@@ -67,11 +59,12 @@ class ExampleSocketIO extends React.Component {
                         featureToggle: data.featureToggle,
                         isExperimentalEnabled: false,
                     },
-
+                    // handler for multiple listeners
+                    isSubscribed: true
                 });
             });
-
         }
+        
     }
     /**
      * NOTE:    This is a Lift/shift from utils library
@@ -105,7 +98,7 @@ class ExampleSocketIO extends React.Component {
     render() {
         const {
             config: {
-                featureToggle: { features }
+                featureToggle: { features = [] }
             },
             defaultConfig
         } = this.state;
@@ -114,7 +107,6 @@ class ExampleSocketIO extends React.Component {
         const appName = 'Example of feature toggle setup';
         const defaultConfigObj = this.getFeatureSet('default:', defaultConfig.featureToggle.features);
         const updatedConfig = this.getFeatureSet('updated', features);
-        const loadedSTuff = updatedConfig.length ? <div className="col-6">{updatedConfig}</div> : 'features not loaded yet...';
 
         const featureToggleData = (
             <div className="row">
@@ -122,7 +114,7 @@ class ExampleSocketIO extends React.Component {
                     <h4>Features include:</h4></div>
 
                 {defaultConfigObj && <div className="col-6">{defaultConfigObj}</div>}
-                {loadedSTuff}
+                {updatedConfig.length ? <div className="col-6">{updatedConfig}</div> : 'features not loaded yet...'}
             </div>
         );
         /**

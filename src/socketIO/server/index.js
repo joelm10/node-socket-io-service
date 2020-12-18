@@ -75,8 +75,7 @@ const ioWrapper = () => {
         logger(`==== Connection joined from:' ${socket.request.connection.remoteAddress}  ====`, 'info');
         //  TODO: Add Robust Auth mechanism
         if (isValidAuth) {
-            const rulesForIP = rulesEngine(socket.request.connection.remoteAddress, featureToggle);
-            socket.emit('featureToggleUpdate', { rulesForIP });
+            socket.emit('featureToggleUpdate', { featureToggle });
         } else {
             socket.emit('featureToggleUpdate', { status: 401, auth: false });
         }

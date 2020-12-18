@@ -6,6 +6,11 @@
     "directories": {
         "lib": "lib"
     },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "demo:socket": "npm run socketIOsvr > /dev/null | webpack-dev-server --mode development --open --hot --config Build/webpack/webpack.config.js",
+        "socketIOsvr": "node ./src/socketIO/server/index.js"
+    },
     "dependencies": {
         "apollo-boost": "^0.4.3",
         "axios": "^0.19.0",
@@ -37,11 +42,6 @@
         "webpack-cli": "^3.3.7",
         "webpack-dev-server": "^3.8.0",
         "winston": "^3.2.1"
-    },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "demo:socket": "npm run socketIOsvr > /dev/null | webpack-dev-server --mode development --open --hot --config Build/webpack/webpack.config.js",
-        "socketIOsvr": "node ./src/socketIO/server/index.js"
     },
     "author": "joelm <joelm@jmm.id.au",
     "license": "ISC"
