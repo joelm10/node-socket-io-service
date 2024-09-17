@@ -5,6 +5,7 @@ export const  exampleProps = {
 };
 
 export const defaultConfig = {
+    delayTime: 2000,
     featureToggle: {
         features: [
             {

@@ -1,26 +1,24 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 /**
  * This fild contains demo helpers components for examples
  */
-export class HeaderWrapper extends React.PureComponent {
-    render() {
-        const { appName } = this.props;
-        return (
-            <React.Fragment>
-                <nav id="" className="navbar navbar-expand-sm navbar-dark bg-teal" role="navigation">
-                    <div className="container-fluid"></div>
-                </nav>
-                <header id="gel-header" role="banner">
-                    <div className="container">
-                        <div>
-                            <h1>{appName}</h1>
-                        </div>
+export const HeaderWrapper = (props) => {
+    const { appName } = props;
+    return (
+        <Fragment>
+            <nav id="" className="navbar navbar-expand-sm navbar-dark bg-teal" role="navigation">
+                <div className="container-fluid"></div>
+            </nav>
+            <header id="gel-header" role="banner">
+                <div className="container">
+                    <div>
+                        <h1>{appName}</h1>
                     </div>
-                </header>
-            </React.Fragment>
-        )
-    }
+                </div>
+            </header>
+        </Fragment>
+    );
 };
 
 export const listWrapper = (
