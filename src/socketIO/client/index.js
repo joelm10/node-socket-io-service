@@ -30,9 +30,6 @@ const ExampleSocketIO = (props) => {
         delayTime: props?.delayTime
     };
 
-    // Use config, but allow for over-ride
-    // const { delayTime = 2000 } = defaultConfig;
-
     const [displayState, setDisplayValues] = useState(initialState);
 
     /**
@@ -43,7 +40,9 @@ const ExampleSocketIO = (props) => {
         try {
             const { delayTime } = displayState;
             // NOTE: This example has a 2 second delay. but should be set based on use case
-            setInterval(() => { getFeatures(); clearInterval() }, delayTime);
+            setTimeout(() => {
+                getFeatures();
+            }, delayTime);
         } catch (e) {
             console.log('err', e);
         }
