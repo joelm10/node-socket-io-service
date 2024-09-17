@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import io from 'socket.io-client';
 
 import {
-    exampleProps
+    exampleProps,
+    defaultConfig as baseDefaultConfig
 } from '../../config/';
-
-import { defaultConfig as baseDefaultConfig } from '../../config/index.js';
 
 // sample components
 import { HeaderWrapper, tabWrapper, listWrapper } from '../../reactComponents/index.js';
+
+import getFeatures from './common/socketIO/listener/index.js';
+import getFeatureSet from './common/generators/features/index.js';
+import isFeatureEnabled from './common/features/featuresEnabled/index.js';
 
 /**
  *  Example react Component to:
@@ -39,69 +41,16 @@ const ExampleSocketIO = (props) => {
     useEffect(() => {
         try {
             const { delayTime } = displayState;
-            // NOTE: This example has a 2 second delay. but should be set based on use case
+            // NOTE: This example has a 4500 second delay. but should be set based on use case
             setTimeout(() => {
-                getFeatures();
+                //  (event = 'featureToggleUpdate', stateCallback, componentState, config)
+                getFeatures('featureToggleUpdate', setDisplayValues, displayState, props);
             }, delayTime);
         } catch (e) {
             console.log('err', e);
         }
 
     }, [delayTime]);
-
-
-    const getFeatures = () => {
-        const { isSubscribed } = displayState;
-        if (!isSubscribed) {
-            //  Step 3: Hook into socketIO to listen for updates
-            //  TODO: update example to use socketIO wrapper
-            const { endPointUrl, options } = props;
-            const socket = io(endPointUrl, options);
-
-            socket.on('featureToggleUpdate', (data) => {
-                /** Change to use hook */
-                // update stuff based on the example
-                setDisplayValues({
-                    ...displayState,
-                    config: {
-                        featureToggle: data.featureToggle,
-                        isExperimentalEnabled: false,
-                    },
-                    // handler for multiple listeners
-                    isSubscribed: true
-                });
-            });
-        }
-
-    };
-    /**
-     * NOTE:    This is a Lift/shift from utils library
-     *          It should be imported from /libs/featureToggles 
-     */
-    const isFeatureEnabled = (feature, enableExperimental, featureSet = featureSet.features) => {
-        const { isExperimentalEnabled } = displayState.config;
-        // return bool if name is In Array && isEnabled OR isExpermental item supported
-        const isEnabled = featureSet.some((item) => {
-            // feature in array
-            const isFeaturePresent = item.featureName === feature;
-            // is feature experimental role enabled- or overridden
-            const enableExperimentalFeature = isExperimentalEnabled || enableExperimental;
-            return isFeaturePresent && (item.isEnabled || (enableExperimentalFeature && item.isExperimental));
-        });
-        return isEnabled;
-    };
-
-    const getFeatureSet = (title, features) => {
-        return features.map((item) => {
-            return <React.Fragment>{title}
-                <ul key={item.featureName.toString()}>
-                    <li>featureName: {item.featureName}</li>
-                    <li>isExperimental:{item.isExperimental.toString()}</li>
-                    <li>isEnabled: {item.isEnabled.toString()}</li >
-                </ul>
-            </React.Fragment>;
-        });
-    }
 
     const {
         config: {
@@ -114,7 +63,7 @@ const ExampleSocketIO = (props) => {
     // Example content 
     const appName = 'Example of feature toggle setup';
     const defaultConfigObj = getFeatureSet('default:', defaultConfig.featureToggle.features);
-    const updatedConfig = getFeatureSet('updated', features);
+    const updatedConfig = getFeatureSet('updated:', features);
 
     const featureToggleData = (
         <div className="row">
@@ -125,15 +74,15 @@ const ExampleSocketIO = (props) => {
             {updatedConfig.length ? <div className="col-6">{updatedConfig}</div> : 'features not loaded yet...'}
         </div>
     );
+
     /**
      * ============ Below here is simple example react components    ============
-     * Note Lines 128-137 for feature toggle check
      */
     // Enabled by default
     //  Step 5: For each component/feature, check if it is present using helper 
-    const tabEnabled = features?.length === 0 || isFeatureEnabled('tabEnabled', false, features);
+    const tabEnabled = features?.length === 0 || isFeatureEnabled('tabEnabled', false, features, displayState.config);
     // Disabled for example, until update from socketIO
-    const listEnabled = isFeatureEnabled('listWrapper', false, features);
+    const listEnabled = isFeatureEnabled('listWrapper', false, features, displayState.config);
     // Enabled by default
     const sampleWrapper = (
         <div className="card">
@@ -141,8 +90,9 @@ const ExampleSocketIO = (props) => {
             Sample content goes here. <br />This component does not use feature toggle.
         </div>
     );
+
     //  Step 6: put in a check for conditional rendering 
-    const tabExample = tabEnabled && tabWrapper
+    const tabExample = tabEnabled && tabWrapper;
     const listExample = listEnabled && listWrapper;
 
     const mainWrapper = (
@@ -160,10 +110,12 @@ const ExampleSocketIO = (props) => {
             <HeaderWrapper appName={appName} />
             {mainWrapper}
         </React.Fragment >
-    )
-    // }
-}
+    );
+};
 
+/**
+ * Simple raw render, this usually would sit at core entrypoint of app, not in component
+ */
 // Rendering method
 const rootNode = 'app';
 const rootElement = document.getElementById(rootNode);
