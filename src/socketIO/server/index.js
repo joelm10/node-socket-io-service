@@ -17,13 +17,14 @@ const config = SERVER_CONFIG;
  *  Express server to return a mock html file
  * @param {*} app
  */
-const appServer = (SERVER_CONFIG) => {
+const appServer = (config) => {
+    const { BASE_URL, PORT, DATA_SET } = config;
     logger('======== appServer start ========', 'info');
-    logger(`======== appServer available at: ${SERVER_CONFIG.BASE_URL}:${SERVER_CONFIG.PORT} ========`, 'info');
+    logger(`======== appServer available at: ${BASE_URL}:${PORT} ========`, 'info');
 
     app.get('/', (req, res) => {
-        logger(`======== appServer request on port: ${SERVER_CONFIG.PORT}`, 'info');
-        res.sendFile(SERVER_CONFIG.DATA_SET.indexPage);
+        logger(`======== appServer request on port: ${PORT}`, 'info');
+        res.sendFile(DATA_SET.indexPage);
     });
 
     return app;
@@ -32,7 +33,7 @@ const appServer = (SERVER_CONFIG) => {
 try {
     server.listen(SERVER_CONFIG.PORT);
 
-    appServer();
+    appServer(SERVER_CONFIG);
 } catch (e) {
     logger(`AppServer: Instantiation error \n${e}`, 'err');
 }
