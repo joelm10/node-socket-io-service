@@ -3,6 +3,9 @@
 # dependencies
 node_modules
 
+# logs - runtime
+logs
+
 # testing
 /coverage
 

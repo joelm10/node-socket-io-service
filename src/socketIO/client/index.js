@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
 import {
-    exampleProps,
-    defaultConfig as baseDefaultConfig
+    defaultConfig as baseDefaultConfig,
+    exampleProps
 } from '../../config/';
 
 // sample components
-import { HeaderWrapper, tabWrapper, listWrapper } from '../../reactComponents/index.js';
+import { HeaderWrapper, listWrapper, tabWrapper } from '../../reactComponents';
 
-import getFeatures from './common/socketIO/listener/index.js';
-import getFeatureSet from './common/generators/features/index.js';
-import isFeatureEnabled from './common/features/featuresEnabled/index.js';
+import { default as getFeatureSet, default as isFeatureEnabled } from './common/generators/features';
+import getFeatures from './common/socketIO/listener';
 
 /**
  *  Example react Component to:
@@ -118,7 +117,10 @@ const ExampleSocketIO = (props) => {
  */
 // Rendering method
 const rootNode = 'app';
-const rootElement = document.getElementById(rootNode);
+const container = document.getElementById(rootNode);
 
-// Render to page
-ReactDOM.render(<ExampleSocketIO {...exampleProps} />, rootElement);
+try {
+    createRoot(container).render(<ExampleSocketIO {...exampleProps} />);
+} catch (e) {
+    console.error(`Render error:\n ${e}`);
+}

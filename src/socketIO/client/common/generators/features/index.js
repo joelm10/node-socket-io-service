@@ -6,8 +6,8 @@ import React, { Fragment } from "react";
  * @param {array} features 
  * @returns 
  */
-const getFeatureSet = (title, features) => {
-    const featureSet = features?.map((item) => {
+const getFeatureSet = (title, features = []) => {
+    const featureSet = features?.length > 0 && features?.map((item) => {
         const { featureName, isExperimental, isEnabled } = item;
         return <Fragment>{title}
             <ul key={featureName.toString()}>
@@ -15,7 +15,7 @@ const getFeatureSet = (title, features) => {
                 <li>isExperimental:{isExperimental.toString()}</li>
                 <li>isEnabled: {isEnabled.toString()}</li >
             </ul>
-        </Fragment>;
+        </Fragment>
     });
     return featureSet;
 };
