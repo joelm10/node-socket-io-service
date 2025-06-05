@@ -7,8 +7,11 @@ export const HeaderWrapper = (props) => {
     const { appName } = props;
     return (
         <Fragment>
-            <nav id="" className="navbar navbar-expand-sm navbar-dark bg-teal" role="navigation">
-                <div className="container-fluid"></div>
+            <nav id="main-navbar" className="navbar navbar-expand-sm navbar-dark bg-teal" role="navigation">
+                <div className="container-fluid">
+                    {/* Add meaningful content here or remove this div */}
+                    <span>Navigation content goes here</span>
+                </div>
             </nav>
             <header id="gel-header" role="banner">
                 <div className="container">
@@ -36,4 +39,3 @@ export const tabWrapper = (
         Tab wrapper content goes. <br />This component is enabled by default using react state
     </div>
 );
-

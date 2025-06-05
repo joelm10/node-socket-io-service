@@ -13,10 +13,23 @@ import { default as getFeatureSet, default as isFeatureEnabled } from './common/
 import getFeatures from './common/socketIO/listener';
 
 /**
- *  Example react Component to:
- *  -   connect to socketIO
- *  -   display data
- *  -   update feature toggle
+ * ExampleSocketIO Component - Demonstrating feature toggle setup with Socket.IO
+ *
+ * This component showcases how to implement feature toggles that can be dynamically
+ * updated via Socket.IO. It initializes with default configurations and updates
+ * features after a specified delay time.
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {number} [props.delayTime] - Delay time in milliseconds before fetching features
+ * @param {Object} [props.config] - Configuration object passed to the component
+ * 
+ * @example
+ * // Using the component with a custom delay time
+ * <ExampleSocketIO delayTime={3000} />
+ * 
+ * @returns {JSX.Element} A React fragment containing the header and main content
+ * with components that are conditionally rendered based on feature toggles
  */
 const ExampleSocketIO = (props) => {
     //  Step 1: Add feature toggle to top level compoent state
@@ -40,16 +53,16 @@ const ExampleSocketIO = (props) => {
     useEffect(() => {
         try {
             const { delayTime } = displayState;
-            // NOTE: This example has a 4500 second delay. but should be set based on use case
+            // NOTE: This example has a delay that should be set based on use case
             setTimeout(() => {
-                //  (event = 'featureToggleUpdate', stateCallback, componentState, config)
+                // Example: (event = 'featureToggleUpdate', stateCallback, componentState, config)
                 getFeatures('featureToggleUpdate', setDisplayValues, displayState, props);
-            }, delayTime);
+            }, delayTime || 4500); // Default to 4500ms if delayTime is undefined
         } catch (e) {
-            console.log('err', e);
+            console.error('Error occurred:', e);
         }
 
-    }, [delayTime]);
+    }, [displayState.delayTime]);
 
     const {
         config: {
